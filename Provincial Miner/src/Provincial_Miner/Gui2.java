@@ -27,16 +27,53 @@ import javafx.stage.Stage;
  *
  */
 public class Gui2 extends Application {
-
+/**
+ * This is a grid style layout that will be centered at the bottom
+ */
     GridPane grid;
+    /**
+     * Label Identifying the start date with MM/DD/YYYY
+     */
     Label startDateFinder;
+    /**
+     *  Label Identifying the end date with MM/DD/YYYY up to current date
+     */
     Label endDateFinder;
+    /**
+     *  Drop down list of all the people that can be searched
+     */
     ComboBox<String> people;
+    /**
+     *  Observable list will populate the people combo box
+     */
+    ObservableList<String> peopleList;
+    /**
+     *  Drop down list of all the topics that can be searched
+     */
     ComboBox<String> topical;
+    /**
+     *  topicalList will populate the topical combo box
+     */
+    ObservableList<String> topicalList;
+    /**
+     * User enters the start date
+     */
     TextField startDate;
+    /**
+     *  User enters the end date
+     */
     TextField endDate;
+    /**
+     *  Button will start the search and open the file
+     */
     Button find;
+    /**
+     *  Progressbar will show it is working.
+     */
     ProgressBar progress;
+    /**
+     * scene will use a css sheet to style and hold all the GUI items
+     */
     Scene scene;
 
     /**
@@ -62,25 +99,23 @@ public class Gui2 extends Application {
         grid.setHgap(10);
         grid.setVgap(5);
         grid.setPadding(new Insets(25, 25, 25, 25));
-        Label startDateFinder = new Label("Start Date");
+
+        startDateFinder = new Label("Start Date");
         grid.add(startDateFinder, 0, 3);
 
         endDateFinder = new Label("End Date");
         grid.add(endDateFinder, 1, 3);
-        // text field will recieve input from user to load a Runnable
+       
         people = new ComboBox();
         people.setPromptText("Person");
         people.setMinWidth(225);
         people.setEditable(true);
         grid.add(people, 0, 0);
 
-        ObservableList<String> test = FXCollections.observableArrayList();
-        for (int i = 0; i < 10; i++) {
-            test.add("basketball");
-            test.add("gator");
-            test.add("apples");
-        }
-        people.setItems(test);
+        peopleList = FXCollections.observableArrayList();
+//        people.setItems(peopleList);
+        topicalList = FXCollections.observableArrayList();
+      //   topical.setItems(topicalList);
 
         topical = new ComboBox();
         topical.setPromptText("Topic");

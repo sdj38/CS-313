@@ -76,10 +76,6 @@ public class Miner extends Application {
                 topic = gui.getTopical().getValue();
                 startDate = gui.getStartDate().getText();
                 endDate = gui.getEndDate().getText();
-                System.out.println(person);
-                System.out.println(topic);
-                System.out.println(startDate);
-                System.out.println(endDate);
                 
                 if (person.equals("")  && !topic.equals("")){
                     //librarian.searchTopic(topic,startDate,endDate);

@@ -181,13 +181,13 @@ public class Gui2 extends Application {
 
         peopleList = FXCollections.observableArrayList();
        // for (int i = 0; i < 5; i++) {
-         //   peopleList.add("Alfred G");
-       // }
-      //  people.setItems(peopleList);
+        //   peopleList.add("Alfred G");
+        // }
+        //  people.setItems(peopleList);
         topicalList = FXCollections.observableArrayList();
        // for (int i = 0; i < 5; i++) {
         //    topicalList.add("Fishing");
-       // }
+        // }
 
         topical = new ComboBox();
         topical.setPromptText("Topic");

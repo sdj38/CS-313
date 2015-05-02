@@ -5,6 +5,7 @@
  */
 package classifier;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import weka.classifiers.Classifier;
@@ -19,10 +20,13 @@ public class KNNClassifier extends Classifier {
 
     Instances inputs;
     int neighbors = 15;
+    ArrayList<String> compares;
 
     @Override
     public void buildClassifier(Instances i) throws Exception {
         this.inputs = i;
+        
+        
     }
 
     @Override
@@ -45,19 +49,14 @@ public class KNNClassifier extends Classifier {
             // sets the array to the size of the number of attributes to get the distances
             double[] attr = new double[inputs.numAttributes()];
             // goes through the attributes and loads the double array
-            for (int j = 0; j < inputs.numAttributes(); j++) {
-                if(inputs.instance(i).attribute(j).isNominal()){
-                    // if its a nominal value assign it the value of its index
-                   attr[j] = inputs.instance(i).attribute(j).index();
-                        
-                }else{
-                
+            for (int j = 0; j < inputs.numAttributes() - 1 ; j++) {
+               
                 attr[j] = inputs.instance(i).value(j);
-                }
+                
             }
             // calculate the distance of the object to be classified and
             // the other data points
-            for (int k = 0; k < inputs.numAttributes(); k++) {
+            for (int k = 0; k < inputs.numAttributes() -1; k++) {
                 distance += Math.abs(instnc.value(k) - attr[k]);
 
             }

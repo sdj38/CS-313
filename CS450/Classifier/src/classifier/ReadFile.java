@@ -27,9 +27,9 @@ public class ReadFile {
     /*
     This function will read in from a csv file and store it into an Instaces class
     */
-    public void read(){
+    public void read(String fileName){
             data = null;
-            String fileName = "C://Users//Stephen//Desktop//iris.csv";
+            
         try {
             // this loads a csv file
             loader = new CSVLoader();
@@ -51,8 +51,8 @@ public class ReadFile {
         return data;
     }
 
-    public void setData(Instances data) {
-        this.data = data;
+    public void setData(Instances irisData) {
+        this.data = irisData;
     }
     
 }

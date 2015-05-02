@@ -55,6 +55,7 @@ public class Main {
         //test my kNN algorithm
         Evaluation knnEval = new Evaluation(test);
         knnEval.evaluateModel(knn, test);
+         System.out.println("My Iris kNN Classifier");
         System.out.println(knnEval.toSummaryString());
           
         //wekas knn classifier to compare against
@@ -63,6 +64,7 @@ public class Main {
         kNN.setKNN(7);
         Evaluation closeEval = new Evaluation(test);
         closeEval.evaluateModel(kNN,test);
+         System.out.println("Wekas kNN Classifier");
         System.out.println(closeEval.toSummaryString());
         
         //read a new data set of cars
@@ -87,6 +89,7 @@ public class Main {
         knn.buildClassifier(train);
         knnEval = new Evaluation(test);
         knnEval.evaluateModel(knn, test);
+        System.out.println("My Cars kNN Classifier");
         System.out.println(knnEval.toSummaryString());
           
         kNN = new IBk();
@@ -94,6 +97,7 @@ public class Main {
         kNN.setKNN(15);
         closeEval = new Evaluation(test);
         closeEval.evaluateModel(kNN,test);
+         System.out.println("Wekas kNN Classifier");
         System.out.println(closeEval.toSummaryString());
      
         

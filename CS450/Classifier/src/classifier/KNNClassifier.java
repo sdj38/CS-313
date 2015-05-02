@@ -25,8 +25,7 @@ public class KNNClassifier extends Classifier {
     @Override
     public void buildClassifier(Instances i) throws Exception {
         this.inputs = i;
-        
-        
+
     }
 
     @Override
@@ -36,8 +35,8 @@ public class KNNClassifier extends Classifier {
 
     @Override
     public double classifyInstance(Instance instnc) throws Exception {
-        
-      // the value that will end up being returned
+
+        // the value that will end up being returned
         double classified = 0;
         // an array to hold the distances to find the nearest neighbors
         double[] distances = new double[neighbors];
@@ -49,14 +48,14 @@ public class KNNClassifier extends Classifier {
             // sets the array to the size of the number of attributes to get the distances
             double[] attr = new double[inputs.numAttributes()];
             // goes through the attributes and loads the double array
-            for (int j = 0; j < inputs.numAttributes() - 1 ; j++) {
-               
+            for (int j = 0; j < inputs.numAttributes() - 1; j++) {
+
                 attr[j] = inputs.instance(i).value(j);
-                
+
             }
             // calculate the distance of the object to be classified and
             // the other data points
-            for (int k = 0; k < inputs.numAttributes() -1; k++) {
+            for (int k = 0; k < inputs.numAttributes() - 1; k++) {
                 distance += Math.abs(instnc.value(k) - attr[k]);
 
             }
@@ -76,7 +75,7 @@ public class KNNClassifier extends Classifier {
             }
 
         }
-       // holds the class type with the amount of times its neighbor is near by
+        // holds the class type with the amount of times its neighbor is near by
         HashMap<Double, Integer> results = new HashMap();
         for (int i = 0; i < neighbors; i++) {
             double temp = type[i];
@@ -96,7 +95,7 @@ public class KNNClassifier extends Classifier {
 
         classified = maxEntry.getKey();
 
-        return classified;//To change body of generated methods, choose Tools | Templates.
+        return classified;
 
     }
 
@@ -111,5 +110,5 @@ public class KNNClassifier extends Classifier {
     public void setNeighbors(int neighbors) {
         this.neighbors = neighbors;
     }
-    
+
 }

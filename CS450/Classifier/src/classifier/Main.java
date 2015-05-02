@@ -3,19 +3,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package classifier;
 
 import java.util.Random;
 import weka.classifiers.Evaluation;
 import weka.classifiers.lazy.IBk;
-import weka.core.Attribute;
-import weka.core.Instance;
 import weka.core.Instances;
-import weka.core.neighboursearch.LinearNNSearch;
 import weka.filters.Filter;
 import weka.filters.unsupervised.attribute.Standardize;
-import weka.filters.unsupervised.instance.RemovePercentage;
 
 /**
  * this class gathers a csv file and performs some tests and analysis on it.
@@ -23,7 +18,7 @@ import weka.filters.unsupervised.instance.RemovePercentage;
  * @author Stephen
  */
 public class Main {
-    
+
     public Main() {
     }
 
@@ -33,85 +28,78 @@ public class Main {
     public static void main(String[] args) throws Exception {
         Random rand = new Random();
         ReadFile reader = new ReadFile();
-        reader.read( "C://Users//Stephen//Desktop//iris.csv");
+        reader.read("C://Users//Stephen//Desktop//iris.csv");
         // sets data equal to what the reader class gathers
         Instances data = new Instances(reader.getData());
         // randomize the data set
         data.randomize(rand);
         Standardize standard = new Standardize();
-        
-      
-      
+
         KNNClassifier knn = new KNNClassifier();
 
         int trainNum = (int) (data.numInstances() * .7d);
         int testNum = data.numInstances() - trainNum;
-        
-     
-        // seperate into a training set and a irisTest set
+
+        // seperate into a training set and a Test set
         Instances rtrain = new Instances(data, 0, trainNum);
         Instances rtest = new Instances(data, trainNum, testNum);
-      standard.setInputFormat(rtrain);
+        //standarize the values
+        standard.setInputFormat(rtrain);
         Instances train = Filter.useFilter(rtrain, standard);
-        Instances test = Filter.useFilter(rtest,standard);
+        Instances test = Filter.useFilter(rtest, standard);
         // set the number of neighbors
         knn.setNeighbors(7);
         knn.buildClassifier(train);
         //test my kNN algorithm
         Evaluation knnEval = new Evaluation(test);
         knnEval.evaluateModel(knn, test);
-         System.out.println("My Iris kNN Classifier");
+        System.out.println("My Iris kNN Classifier");
         System.out.println(knnEval.toSummaryString());
-          
+
         //wekas knn classifier to compare against
         IBk kNN = new IBk();
         kNN.buildClassifier(train);
         kNN.setKNN(7);
         Evaluation closeEval = new Evaluation(test);
-        closeEval.evaluateModel(kNN,test);
-         System.out.println("Wekas kNN Classifier");
+        closeEval.evaluateModel(kNN, test);
+        System.out.println("Wekas kNN Classifier");
         System.out.println(closeEval.toSummaryString());
-        
+
         //read a new data set of cars
-         reader.read( "C://Users//Stephen//Desktop//cars.csv");
+        reader.read("C://Users//Stephen//Desktop//cars.csv");
         // sets data equal to what the reader class gathers
         data = new Instances(reader.getData());
         // randomize the data set
         data.randomize(rand);
-       
+
         knn = new KNNClassifier();
 
         trainNum = (int) (data.numInstances() * .7d);
         testNum = data.numInstances() - trainNum;
-        
-     
-        // seperate into a training set and a irisTest set
-         rtrain = new Instances(data, 0, trainNum);
-         rtest = new Instances(data, trainNum, testNum);
-           standard.setInputFormat(rtrain);
-         train = Filter.useFilter(rtrain, standard);
-         test = Filter.useFilter(rtest,standard);
-      
-         // set nearest neighbors
+
+        // seperate into a training set and a Test set
+        rtrain = new Instances(data, 0, trainNum);
+        rtest = new Instances(data, trainNum, testNum);
+        standard.setInputFormat(rtrain);
+        train = Filter.useFilter(rtrain, standard);
+        test = Filter.useFilter(rtest, standard);
+
+        // set nearest neighbors
         knn.setNeighbors(15);
         knn.buildClassifier(train);
         knnEval = new Evaluation(test);
         knnEval.evaluateModel(knn, test);
         System.out.println("My Cars kNN Classifier");
         System.out.println(knnEval.toSummaryString());
-          
+
         kNN = new IBk();
         kNN.buildClassifier(train);
         kNN.setKNN(15);
         closeEval = new Evaluation(test);
-        closeEval.evaluateModel(kNN,test);
-         System.out.println("Wekas kNN Classifier");
+        closeEval.evaluateModel(kNN, test);
+        System.out.println("Wekas kNN Classifier");
         System.out.println(closeEval.toSummaryString());
-     
-        
-      
 
-      
     }
-    
+
 }

@@ -13,6 +13,7 @@ import weka.core.Attribute;
 import weka.core.Instance;
 import weka.core.Instances;
 import weka.core.neighboursearch.LinearNNSearch;
+import weka.filters.Filter;
 import weka.filters.unsupervised.attribute.Standardize;
 import weka.filters.unsupervised.instance.RemovePercentage;
 
@@ -38,6 +39,8 @@ public class Main {
         // randomize the data set
         data.randomize(rand);
         Standardize standard = new Standardize();
+        
+      
       
         KNNClassifier knn = new KNNClassifier();
 
@@ -46,9 +49,11 @@ public class Main {
         
      
         // seperate into a training set and a irisTest set
-        Instances train = new Instances(data, 0, trainNum);
-        Instances test = new Instances(data, trainNum, testNum);
-      
+        Instances rtrain = new Instances(data, 0, trainNum);
+        Instances rtest = new Instances(data, trainNum, testNum);
+      standard.setInputFormat(rtrain);
+        Instances train = Filter.useFilter(rtrain, standard);
+        Instances test = Filter.useFilter(rtest,standard);
         // set the number of neighbors
         knn.setNeighbors(7);
         knn.buildClassifier(train);
@@ -81,8 +86,11 @@ public class Main {
         
      
         // seperate into a training set and a irisTest set
-         train = new Instances(data, 0, trainNum);
-         test = new Instances(data, trainNum, testNum);
+         rtrain = new Instances(data, 0, trainNum);
+         rtest = new Instances(data, trainNum, testNum);
+           standard.setInputFormat(rtrain);
+         train = Filter.useFilter(rtrain, standard);
+         test = Filter.useFilter(rtest,standard);
       
          // set nearest neighbors
         knn.setNeighbors(15);

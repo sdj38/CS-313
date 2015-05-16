@@ -38,6 +38,13 @@ public class DecisionTree extends Classifier {
         // initialize data
         for (int j = 0; j < i.numInstances(); j++) {
             data.add(i.instance(j));
+
+        }
+        for (int k = 0; k < i.numAttributes(); k++) {
+            if (i.instance(0).attribute(k).isNumeric()) {
+                System.out.println("Unable to handle numeric data!");
+                return;
+            }
         }
         // find entropy for the class attribute
         rootEntropy = mainEntropy(data, data.get(0).classAttribute());

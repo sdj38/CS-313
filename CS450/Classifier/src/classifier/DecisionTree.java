@@ -24,12 +24,14 @@ public class DecisionTree extends Classifier {
     Tree tree;
     double rootEntropy;
     double[] entropies;
+    Instances supplier;
 
     ArrayList<Instance>[] check;
 
     @Override
     public void buildClassifier(Instances i) throws Exception {
         // ~/\~ add escape for leaf nodes
+        supplier = i;
         ArrayList<Instance> data;
         attr = new ArrayList<>();
         data = new ArrayList<>();
@@ -65,12 +67,9 @@ public class DecisionTree extends Classifier {
     @Override
     public double classifyInstance(Instance instnc) throws Exception {
         double guess = -1;
-        //  System.out.println(tree.getRoot().getData());
         int val = (int) instnc.value(tree.getRoot().getData());
-        //  System.out.println(val);
         Node n = tree.getRoot();
         for (int i = 0; i < instnc.numAttributes(); i++) {
-
             if (n.getAttrVal() != -1) {
                 guess = n.getAttrVal();
                 break;
@@ -81,27 +80,23 @@ public class DecisionTree extends Classifier {
                     guess = n.getAttrVal();
                     break;
                 }
-                //     System.out.println(n.getData());
-
                 val = (int) instnc.value(n.getData());
-                //    System.out.println(val);
             }
         }
+        //if the tree doesn't have the value its looking for just say what the parents most likely is
         if (guess == -1) {
-            guess = tree.getRoot().getInfo().get(0).numClasses() / 2;
+            guess = mostLikely(n.getParent().getInfo());
         }
         return guess;
     }
 
     public void buildTree(Node ptr) {
-        // if there is no data return
+        // if there is no data return set node to empty possibly prune off later?
         if (ptr.getInfo().isEmpty()) {
-            System.out.println("No Data!");
+            ptr.setSet(true);
             return;
         }
-        for (int i = 0; i < ptr.getRemaining().size(); i++) {
-            System.out.println(ptr.getRemaining().get(i).toString());
-        }
+
         // check to see if all class values are the same
         double classValue = ptr.getInfo().get(0).classValue();
         boolean flag = false;
@@ -112,19 +107,14 @@ public class DecisionTree extends Classifier {
         }
         // if all classes are the same set the nodes attrval and return
         if (!flag) {
-            System.out.println(ptr.getData());
-            System.out.println("create leaf node " + classValue + "to parent node" + ptr.getParent().getData().toString());
             ptr.setAttrVal(classValue);
-            System.out.println(ptr.getAttrVal());
             return;
         }
         if (ptr.getRemaining().isEmpty()) {
-            System.out.println("no more attributes to split on");
             ptr.setAttrVal(mostLikely(ptr.getInfo()));
             return;
         }
 
-        System.out.println("size of data" + ptr.getInfo().size());
         double[] entropyValues = new double[ptr.getRemaining().size()];
         // find entropy of the different attributes
         for (int j = 0; j < ptr.getRemaining().size(); j++) {
@@ -145,7 +135,6 @@ public class DecisionTree extends Classifier {
 
         }
 
-        System.out.println("creating node" + split);
         // make new nodes to put the data of each attribute value
         for (int i = 0; i < check.length; i++) {
             ptr.add(new Node(ptr));
@@ -272,7 +261,13 @@ public class DecisionTree extends Classifier {
             return;
         }
         if (n.getData() == null) {
-            System.out.println("leaf node: " + n.getAttrVal());
+            if (n.isSet()) {
+
+                System.out.println("empty leaf node");
+                return;
+            } else {
+                System.out.println("leaf node: " + supplier.attribute(supplier.numAttributes() - 1).value((int) n.getAttrVal()));
+            }
             return;
         } else {
             System.out.println("current node: " + n.getData().toString());

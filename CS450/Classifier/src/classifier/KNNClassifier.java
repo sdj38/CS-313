@@ -49,9 +49,11 @@ public class KNNClassifier extends Classifier {
             double[] attr = new double[inputs.numAttributes()];
             // goes through the attributes and loads the double array
             for (int j = 0; j < inputs.numAttributes() - 1; j++) {
-
+                if(inputs.instance(i).attribute(j) == null && inputs.attribute(j).isNominal()){
+                    attr[j] = inputs.attribute(j).numValues()/2;
+                }else{
                 attr[j] = inputs.instance(i).value(j);
-
+                }
             }
             // calculate the distance of the object to be classified and
             // the other data points

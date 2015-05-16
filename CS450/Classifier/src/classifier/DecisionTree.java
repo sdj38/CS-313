@@ -35,9 +35,13 @@ public class DecisionTree extends Classifier {
         ArrayList<Instance> data;
         attr = new ArrayList<>();
         data = new ArrayList<>();
-        // initialize data
+        // initialize data remove missing values
         for (int j = 0; j < i.numInstances(); j++) {
+            if(i.instance(j).hasMissingValue()){
+                
+            }else{
             data.add(i.instance(j));
+            }
 
         }
         for (int k = 0; k < i.numAttributes(); k++) {

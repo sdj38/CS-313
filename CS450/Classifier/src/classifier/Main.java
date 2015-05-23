@@ -9,6 +9,7 @@ import java.util.Random;
 import weka.classifiers.Classifier;
 import weka.classifiers.Evaluation;
 import weka.classifiers.lazy.IBk;
+import weka.classifiers.trees.Id3;
 import weka.core.Instance;
 import weka.core.Instances;
 import weka.filters.Filter;
@@ -30,22 +31,16 @@ public class Main {
     public static void main(String[] args) throws Exception {
         Random rand = new Random();
         ReadFile reader = new ReadFile();
-        reader.read("C://Users//Stephen//Desktop//vote.csv");
+        reader.read("C://Users//Stephen//Desktop//Datasets//iris.csv");
         // sets data equal to what the reader class gathers
         Instances data = new Instances(reader.getData());
         // randomize the data set
         data.randomize(rand);
         Standardize standard = new Standardize();
-Instance i = data.firstInstance();
-        Classifier dTree = new DecisionTree();
-       
-//      System.out.println(dTree.classifyInstance(i));
-      
-     
-      
-      
+    //    Classifier dTree = new DecisionTree();
 
-       int trainNum = (int) (data.numInstances() * .7d);
+//      System.out.println(dTree.classifyInstance(i));
+        int trainNum = (int) (data.numInstances() * .7d);
         int testNum = data.numInstances() - trainNum;
 
         // seperate into a training set and a Test set
@@ -56,10 +51,28 @@ Instance i = data.firstInstance();
         Instances train = Filter.useFilter(rtrain, standard);
         Instances test = Filter.useFilter(rtest, standard);
 //         set the number of neighbors
-         dTree.buildClassifier(train);
-       Evaluation eval = new Evaluation(test);
-      eval.evaluateModel(dTree, test);
-      System.out.println(eval.toSummaryString());
+          
+        NeuralNetwork nn = new NeuralNetwork();
+        nn.buildClassifier(train);
+        Evaluation nVal = new Evaluation (test);
+        nVal.evaluateModel(nn,test);
+        System.out.println(nVal.toSummaryString());
+//        KNNClassifier knn = new KNNClassifier();
+//        knn.buildClassifier(train);
+//        Evaluation kval = new Evaluation(test);
+//        kval.evaluateModel(knn,test);
+//        System.out.println(kval.toSummaryString());
+//        
+//        dTree.buildClassifier(train);
+//        Evaluation eval = new Evaluation(test);
+//        eval.evaluateModel(dTree, test);
+//        System.out.println(eval.toSummaryString());
+//
+//        Id3 tree = new Id3();
+//        tree.buildClassifier(train);
+//         Evaluation tval = new Evaluation(test);
+//        tval.evaluateModel(tree, test);
+//        System.out.println(tval.toSummaryString());
       
     }
 

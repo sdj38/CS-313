@@ -53,6 +53,8 @@ public class Main {
 //         set the number of neighbors
           
         NeuralNetwork nn = new NeuralNetwork();
+        nn.setLayers(2);
+        nn.setNodes(1);
         nn.buildClassifier(train);
         Evaluation nVal = new Evaluation (test);
         nVal.evaluateModel(nn,test);

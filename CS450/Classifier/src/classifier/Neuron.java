@@ -13,7 +13,8 @@ public class Neuron {
     int classVal;
     int threshold;
     double[] weights;
-    int output;
+    double output;
+    double nextTotal;
     private static final double learnRate = .3;
 
     /**
@@ -45,7 +46,7 @@ public class Neuron {
     // check to see if the input is greater than the threshold
     public void checkOutput(Instance i) {
         double total = 0;
-
+ // System.out.println(weights.length + "# of weights for input layer");
         for (int j = 0; j < i.numAttributes(); j++) {
             // bias input
             if (j == 0) {
@@ -54,11 +55,21 @@ public class Neuron {
                 total += weights[j] * i.value(j - 1);
             }
         }
-        if (total > threshold) {
-            this.output = 1;
-        } else {
-            this.output = 0;
+       output = (1 / (1 + Math.pow(Math.E,-total)));
+    }
+    public void nextLayer(double d,int count){
+        int inc;
+        inc = count + 1;
+        nextTotal += d*weights[inc];
+        System.out.println(d + " incoming output " + weights[inc] + " weight value");
+      //  System.out.println(inc + "count");
+        //System.out.println(weights.length + "# of weights");
+        if(inc == weights.length - 1){
+          //  System.out.println(this + "inside output function");
+        output = (1 / (1 + Math.pow(Math.E,-nextTotal)));
+      //  System.out.println(output + "output");
         }
+        
     }
 
     // if the output is incorrect adjust the weights;
@@ -84,12 +95,21 @@ public class Neuron {
 
     }
 
-    public int getOutput() {
+    public double getOutput() {
         return output;
     }
 
     public int getClassVal() {
         return classVal;
     }
+
+    public double getNextTotal() {
+        return nextTotal;
+    }
+
+    public void setNextTotal(double nextTotal) {
+        this.nextTotal = nextTotal;
+    }
+    
 
 }

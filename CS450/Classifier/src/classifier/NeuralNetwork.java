@@ -22,58 +22,108 @@ public class NeuralNetwork extends Classifier {
 
     @Override
     public void buildClassifier(Instances i) throws Exception {
-        System.out.println(i.numAttributes() + " num attributes");
-        System.out.println(i.numClasses() + "num classes");
         layer = new ArrayList<Layer>();
         for (int j = 0; j < layers; j++) {
-            if (j == 0){
-            layer.add(new Layer(nodes, i.numAttributes() - 1, i.numClasses()));
-            }
-            else{
-                layer.add(new Layer(nodes, layer.get(j -1).getNeurons().size(),i.numClasses()));
+            if (j == 0) {
+                layer.add(new Layer(nodes, i.numAttributes() - 1, i.numClasses()));
+            } else {
+                layer.add(new Layer(nodes, layer.get(j - 1).getNeurons().size(), i.numClasses()));
             }
         }
-        for (int j = 0; j < 20; j++) {
-            for (int d = 0; d < layer.size(); d++) {
-                if (d == 0) {
-                    //if going through the first time use the attributes to feed to the input layer
-                    for (int l = 0; l < i.numInstances(); l++) {
+        // # of times to go through the list of instances
+        for (int j = 0; j < 1; j++) {
+            // loop through instances
+            for (int l = 0; l < i.numInstances(); l++) {
+                // send instance down all the layers
+                forwardFeed(i.instance(l));
+                
+                // back propogation to adjust weights
+                backpropogate(i.instance(l));
+
+            }
+
+        }
+    }
+    public void forwardFeed(Instance i){
+        for (int d = 0; d < layer.size(); d++) {
+                    if (d == 0) {
+                        //if going through the first time use the attributes to feed to the input layer
 
                         for (int k = 0; k < layer.get(d).getNeurons().size(); k++) {
-                            for( int p = 0; p < i.numAttributes()-1; p++){
-                            layer.get(d).getNeurons().get(k).checkOutput(i.instance(l));
+                            for (int p = 0; p < i.numAttributes() - 1; p++) {
+                                layer.get(d).getNeurons().get(k).checkOutput(i);
                             }
-                            // layer.get(d).getNeurons().get(k).adjustWeights(i.instance(l));
+
                         }
-                    }
-                }else{
-                    // go through all of the neurons in layer 'd'
-                    for (int k = 0; k < layer.get(d).getNeurons().size(); k++) {
-                        // get the outputs of layer 'd-1' and feed them to layer 'd'
-                            for( int p = 0; p < layer.get(d-1).getNeurons().size(); p++){
+
+                    } else {
+                        // go through all of the neurons in layer 'd'
+                        for (int k = 0; k < layer.get(d).getNeurons().size(); k++) {
+                            // get the outputs of layer 'd-1' and feed them to layer 'd'
+                            for (int p = 0; p < layer.get(d - 1).getNeurons().size() + 1; p++) {
                                 //account for the bias node
-                                if(p == 0){
-                                    layer.get(d).getNeurons().get(k).nextLayer(-1,p-1);
+                                if (p == 0) {
+                                    layer.get(d).getNeurons().get(k).nextLayer(-1, p);
+                                }else{
+                                layer.get(d).getNeurons().get(k).nextLayer(layer.get(d - 1).getNeurons().get(p -1).getOutput(), p);
                                 }
-                            layer.get(d).getNeurons().get(k).nextLayer(layer.get(d-1).getNeurons().get(p).getOutput(),p);
                             }
                             // set the total back to 0 after it process the previous layer
                             layer.get(d).getNeurons().get(k).setNextTotal(0);
                             // layer.get(d).getNeurons().get(k).adjustWeights(i.instance(l));
                         }
-                                    
+
+                    }
+                }
+        
+    }
+
+    public void backpropogate(Instance i) {
+        for (int d = layer.size() - 1; d > -1; d--) {
+            
+            for (int k = 0; k < layer.get(d).getNeurons().size(); k++) {
+                // calc error for outer layer
+                if (d == layer.size() - 1) {
+                    layer.get(d).getNeurons().get(k).calcOuterError(i);
+                    for (int v = 0; v < layer.get(d).getNeurons().get(k).getWeights().length; v++) {
+                        if (v == 0) {
+                            //account for bias
+                            layer.get(d).getNeurons().get(k).adjustWeights(-1, v);
+                        } else {
+                            layer.get(d).getNeurons().get(k).adjustWeights(layer.get(d - 1).getNeurons().get(v - 1).getOutput(), v);
+                        }
+                    }
+                } else {
+                    for (int v = 0; v < layer.get(d + 1).getNeurons().size(); v++) {
+                        layer.get(d).getNeurons().get(k).calcHiddenError(layer.get(d + 1).getNeurons().get(v).getError(),
+                                layer.get(d + 1).getNeurons().get(v).getWeights(), k + 1);
+
+                    }
+                    layer.get(d).getNeurons().get(k).calcError();
+                    // adjust weights for hidden layer
+                    for (int v = 0; v < layer.get(d).getNeurons().get(k).getWeights().length; v++) {
+                        if (v == 0) {
+                            //account for bias
+                            layer.get(d).getNeurons().get(k).adjustWeights(-1, v);
+                        } else {
+                            if (d == 0) {
+                                layer.get(d).getNeurons().get(k).adjustWeights(i.value(v - 1), v);
+                            } else {
+                                layer.get(d).getNeurons().get(k).adjustWeights(layer.get(d - 1).getNeurons().get(v - 1).getOutput(), v);
+                            }
+                        }
+                    }
 
                 }
             }
+
         }
-          for (int d = 0; d < layer.size(); d++) {
-             // System.out.println(layer.size() + "layers");
-            for (int k = 0; k < layer.get(d).getNeurons().size(); k++) {
-                // get the outputs of layer 'd-1' and feed them to layer 'd'
-                //ln(layer.get(d).getNeurons().size() + "neurons");
-                  //  System.out.println(layer.get(d).getNeurons().get(k).getOutput());
+        for (int r = 0; r < layer.size(); r++) {
+            for (int e = 0; e < layer.get(r).getNeurons().size(); e++) {
+                layer.get(r).getNeurons().get(e).changeWeight();
             }
         }
+
     }
 
     @Override
@@ -86,35 +136,21 @@ public class NeuralNetwork extends Classifier {
         int index = 0;
         double place = 0;
         double[] values = new double[instnc.numClasses()];
-      
-        for (int d = 0; d < layer.size(); d++) {
-            //if at the input layer
-            if (d == 0) {
-                for (int i = 0; i < layer.get(d).getNeurons().size(); i++) {
-                    layer.get(d).getNeurons().get(i).checkOutput(instnc);
-                }
-            }else{
-                for ( int j = 0; j < layer.get(d).getNeurons().size(); j++){
-                    for ( int p = 0; p < layer.get(d-1).getNeurons().size(); p++)
-                     layer.get(d).getNeurons().get(j).nextLayer(layer.get(d-1).getNeurons().get(p).getOutput(),p);
-                }
-            }
-        }
-        for (int i = 0; i < layer.get(layer.size() - 1).getNeurons().size(); i++) {
-            double amount = layer.get(layer.size() - 1).getNeurons().get(i).getOutput(); 
-                values[layer.get(layer.size() - 1).getNeurons().get(i).getClassVal()]+= amount;
+        forwardFeed(instnc);
 
-            
+        for (int i = 0; i < layer.get(layer.size() - 1).getNeurons().size(); i++) {
+            double amount = layer.get(layer.size() - 1).getNeurons().get(i).getOutput();
+            values[layer.get(layer.size() - 1).getNeurons().get(i).getClassVal()] += amount;
+
         }
 
         for (int i = 0; i < values.length; i++) {
             if (values[i] >= place) {
+               
                 place = values[i];
                 index = i;
             }
         }
-        System.out.println(place);
-        System.out.println(index);
         return index;
     }
 

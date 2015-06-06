@@ -32,7 +32,7 @@ public class Main {
     public static void main(String[] args) throws Exception {
         Random rand = new Random();
         ReadFile reader = new ReadFile();
-        reader.read("C://Users//Stephen//Desktop//Datasets//diabetes2.csv");
+        reader.read("C://Users//Stephen//Desktop//Datasets//iris.csv");
         // sets data equal to what the reader class gathers
         Instances data = new Instances(reader.getData());
         // randomize the data set
@@ -41,7 +41,7 @@ public class Main {
             Classifier dTree = new DecisionTree();
 
 //      System.out.println(dTree.classifyInstance(i));
-        int trainNum = (int) (data.numInstances() * .7d);
+        int trainNum = (int) (data.numInstances() * .6d);
         int testNum = (data.numInstances() - trainNum) / 2;
         int validNum = (data.numInstances() - trainNum) / 2;
 
@@ -55,10 +55,12 @@ public class Main {
         Instances train = Filter.useFilter(rtrain, standard);
         Instances test = Filter.useFilter(rtest, standard);
         Instances valid = Filter.useFilter(rvalid, standard);
-//         set the number of neighbors
+
 
         NeuralNetwork nn = new NeuralNetwork();
-        nn.setLayers(3);
+        // # of total layers in network
+        nn.setLayers(2);
+        // # of sets of nodes in the layer the number times the number of class values
         nn.setNodes(3);
         nn.buildClassifier(train);
         double stopCheck = 0;
@@ -72,18 +74,22 @@ public class Main {
                 nn.backpropogate(train.instance(i));
 
             }
+            // test against validation set
             for (int l = 0; l < valid.numInstances(); l++) {
                 if (nn.classifyInstance(valid.instance(l)) == valid.instance(l).classValue()) {
                     correct++;
                 }
                 total++;
             }
+            // find accuracy per epoch
             double percent = (double) correct / (double) total;
-            if (percent >= .99) {
+            // if over 99% stop training
+           
+            // if it starts getting less accurate for too long end it
+            if (k > 45) {
+                 if (percent >= .99) {
                 break;
             }
-            // if it starts getting less accurate for too long end it
-            if (k > 25) {
                 if (stopCheck > percent) {
                     errorCount++;
                     if (errorCount > 7) {

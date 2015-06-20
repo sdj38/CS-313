@@ -6,7 +6,6 @@
 package com.mycompany.discussionboard;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -14,6 +13,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import org.jsoup.*;
+import org.jsoup.safety.Whitelist;
+
 
 /**
  *
@@ -37,6 +39,7 @@ public class ValidateLogin extends HttpServlet {
             throws ServletException, IOException {
             HttpSession sess = request.getSession(true); // starts a new session
             String name = request.getParameter("user");
+            name = Jsoup.clean(name, Whitelist.simpleText());
             ArrayList<Board> boards = new ArrayList<Board>();
                 sess.setAttribute("user", name); // set some session attributes
                 sess.setAttribute("boards", boards);

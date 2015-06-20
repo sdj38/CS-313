@@ -19,6 +19,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import org.jsoup.Jsoup;
+import org.jsoup.safety.Whitelist;
 
 /**
  *
@@ -43,8 +45,10 @@ public class insertThread extends HttpServlet {
         try (PrintWriter o = response.getWriter()) {
             HttpSession session = request.getSession(false);
             String name = (String) session.getAttribute("user");
-            o.print(name);
+            name = Jsoup.clean(name, Whitelist.simpleText());
             String content = request.getParameter("content");
+            content = Jsoup.clean(content, Whitelist.simpleText());
+            content = content.replace("\n", "").replace("\r", "");
             DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
             Date date = new Date();
             dateFormat.format(date);

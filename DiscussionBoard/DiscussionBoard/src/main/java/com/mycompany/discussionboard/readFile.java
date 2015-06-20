@@ -42,12 +42,18 @@ public class readFile extends HttpServlet {
            // String path = getServletContext().getRealPath("/") + "filename.txt";
         String path = System.getenv("OPENSHIFT_DATA_DIR") + "filename.txt";
         out.print(path);
-        File file = new File(path);
-        if(file.length() == 0){
-            out.print("no file");
-             request.getRequestDispatcher("DiscussionThreads.jsp").forward(request, response);
-            
-        }
+        
+        
+ 
+	     File file = new File(path);
+	      if (file.createNewFile()){
+	        System.out.println("File is created!");
+	      }else{
+	        System.out.println("File already exists.");
+	      }
+ 
+    	
+    
         ArrayList<Board> boards = new ArrayList<Board>();
         try (BufferedReader br = new BufferedReader(new FileReader(path))) {
 
@@ -84,7 +90,7 @@ public class readFile extends HttpServlet {
             }
 
         }
-         request.getRequestDispatcher("DiscussionThreads.jsp").forward(request, response);
+        // request.getRequestDispatcher("DiscussionThreads.jsp").forward(request, response);
 
     }
     }

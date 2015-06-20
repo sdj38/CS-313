@@ -39,8 +39,8 @@ public class insertThread extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-            /* TODO output your page here. You may use following sample code. */
-        try (PrintWriter o = response.getWriter()){
+        /* TODO output your page here. You may use following sample code. */
+        try (PrintWriter o = response.getWriter()) {
             HttpSession session = request.getSession(false);
             String name = (String) session.getAttribute("user");
             o.print(name);
@@ -48,21 +48,27 @@ public class insertThread extends HttpServlet {
             DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
             Date date = new Date();
             dateFormat.format(date);
-            
-            ArrayList<Board> updateBoard =  (ArrayList<Board>) session.getAttribute("boards");
-            Board board = new Board(name, content,date.toString());
-              updateBoard.add(board);
-            String path = getServletContext().getRealPath("/") + "threads.txt";
+
+            ArrayList<Board> updateBoard = (ArrayList<Board>) session.getAttribute("boards");
+            Board board = new Board(name, content, date.toString());
+            updateBoard.add(board);
+             String path = System.getenv("OPENSHIFT_DATA_DIR") + "filename.txt";
+            //String path = getServletContext().getRealPath("/") + "filename.txt";
             o.print(path);
-        try (BufferedWriter out = new BufferedWriter(new FileWriter(path,true))) {
-            out.write(board.getName());
-            out.newLine();
-            out.write(board.getContent());
-            out.newLine();
-            out.write(board.getDate());
-            out.newLine();
-        }
-             request.getRequestDispatcher("readFile").forward(request, response);
+            if (board.getContent().equals("") || board.getContent() == null) {
+                request.getRequestDispatcher("readFile").forward(request, response);
+
+            } else {
+                try (BufferedWriter out = new BufferedWriter(new FileWriter(path, true))) {
+                    out.write(board.getName());
+                    out.newLine();
+                    out.write(board.getContent());
+                    out.newLine();
+                    out.write(board.getDate());
+                    out.newLine();
+                }
+                request.getRequestDispatcher("readFile").forward(request, response);
+            }
         }
     }
 

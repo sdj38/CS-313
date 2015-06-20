@@ -39,10 +39,12 @@ public class readFile extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
         /* TODO output your page here. You may use following sample code. */
-        String path = getServletContext().getRealPath("/") + "threads.txt";
+           // String path = getServletContext().getRealPath("/") + "filename.txt";
+        String path = System.getenv("OPENSHIFT_DATA_DIR") + "filename.txt";
         out.print(path);
         File file = new File(path);
-        if(!file.exists()){
+        if(file.length() == 0){
+            out.print("no file");
              request.getRequestDispatcher("DiscussionThreads.jsp").forward(request, response);
             
         }
@@ -76,12 +78,13 @@ public class readFile extends HttpServlet {
                     request.setAttribute("boards", boards);
                     request.getRequestDispatcher("DiscussionThreads.jsp").forward(request, response);
                 }else{
-                    
+                   out.print("hi");
                 boards.add(new Board(name, content, date));
                 }
             }
 
         }
+         request.getRequestDispatcher("DiscussionThreads.jsp").forward(request, response);
 
     }
     }

@@ -1,0 +1,99 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Jun 19, 2015, 4:46:35 PM
+    Author     : Stephen
+*/
+td{
+    width:50%;
+}
+body{
+    background-color:grey;
+    border-left: 10pt solid black;
+    border-right:10pt solid black;
+    border-top: 5pt solid black;
+    border-bottom: 5pt solid black;
+    border-radius:10pt;
+}
+#tree{
+    display:block;
+    margin:auto;
+}
+#login{
+    margin:auto;
+    width:35%;
+    background-color: dimgray;
+    color: white;
+    border: 5pt solid orange;
+    border-radius: 10pt;
+  
+}
+table{
+    margin:auto;
+    width:85%;
+    font-size:18pt;
+    border: 1pt solid orange;
+    background-color:black;
+    border-radius:5pt;
+    
+}
+#th{
+    background-color:orange;
+    text-align:left;
+    border: 1pt solid ghostwhite;
+}
+#right{
+    margin:auto;
+    width:70%;
+    text-align:right;
+    color:orange;
+}
+.header{
+  
+    width:100%;
+    border-bottom: 1pt solid orange;
+    background-color: darkslategray;
+    color: ghostwhite;
+    font-size: 16pt;
+    border-top-right-radius: 5pt;
+    border-top-left-radius: 5pt;
+}
+.thread{
+    margin:auto;
+    width:70%;
+    background-color: whitesmoke;
+   // border: 1pt solid orange;
+    color: black;
+     border-top-right-radius: 5pt;
+     border-top-left-radius: 5pt;
+}
+#create{
+    margin:auto;
+    width:75%;
+    background-color:dimgray;
+    border: 3pt solid orange;
+    border-radius:10pt;
+}
+textArea{
+    background-color:whitesmoke;
+    width:75%;
+    border-radius:10pt;
+    border: 3pt solid orange;
+}
+.date{
+    text-align:right;
+    float:right;
+    font-size:12pt;
+}
+.submit{
+    background-color:orange;
+    font-size:14pt;
+    color:ghostwhite;
+    border-radius:5pt;
+}
+
+
+
